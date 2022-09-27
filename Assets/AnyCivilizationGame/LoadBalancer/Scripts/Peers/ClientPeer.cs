@@ -5,11 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientPeer:PeerBase
+public class ClientPeer : PeerBase
 {
-    public Action<ClientPeer> OnDissconnect { get;  set; }
+    public Action<ClientPeer> OnDissconnect { get; set; }
 
-    public ClientPeer(LoadBalancer loadBalancer, int connectionId) : base(loadBalancer, connectionId){}
+    public ClientPeer(LoadBalancer loadBalancer, int connectionId) : base(loadBalancer, connectionId)
+    {
+    }
+
     #region Public Fiealds
     public ILoginData loginData { get; set; }
     public bool IsLogin
@@ -18,10 +21,12 @@ public class ClientPeer:PeerBase
     }
     #endregion
 
-    protected override void OnDisconnected()
+
+    public override void OnDisconnected()
     {
         base.OnDisconnected();
-        OnDissconnect.Invoke(this);
+        Debug.Log("ClientPeer OnDisconnected");
+        if (OnDissconnect != null)
+            OnDissconnect.Invoke(this);
     }
-
 }

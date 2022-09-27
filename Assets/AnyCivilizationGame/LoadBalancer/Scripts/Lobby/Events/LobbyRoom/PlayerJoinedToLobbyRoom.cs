@@ -1,18 +1,18 @@
+using ACGAuthentication;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerJoinedToLobbyRoom : MonoBehaviour
+public class PlayerJoinedToLobbyRoom : IEvent
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int RoomCode { get; private set; }
+    public LobbyPlayer LobbyPlayer;
+    public LobbyPlayer[] LobbyPlayers;
 
-    // Update is called once per frame
-    void Update()
+    public PlayerJoinedToLobbyRoom(int roomCode, LobbyPlayer[] lobbyPlayers, LobbyPlayer lobbyPlayer)
     {
-        
+        RoomCode = roomCode;
+        LobbyPlayers = lobbyPlayers;
+        LobbyPlayer = lobbyPlayer;
     }
 }

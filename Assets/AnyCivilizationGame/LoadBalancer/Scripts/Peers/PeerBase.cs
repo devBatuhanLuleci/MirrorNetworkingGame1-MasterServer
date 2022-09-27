@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
-public class PeerBase 
+public class PeerBase
 {
     #region Public Fiealds
     public int ConnectionId { get; private set; }
+    public Action OnPeerDisconnected { get; set; }
 
     #endregion
 
@@ -32,15 +33,18 @@ public class PeerBase
     }
     public void Disconnect()
     {
-
+        Debug.Log("PeerBase Disconnect");
         loadBalancer.ServerDisconnect(ConnectionId);
-        OnDisconnected();
     }
 
 
 
-    protected virtual void OnDisconnected()
+
+    public virtual void OnDisconnected()
     {
-
+        Debug.Log("PeerBase OnDisconnected");
+        if (OnPeerDisconnected != null)
+            OnPeerDisconnected.Invoke();
     }
+
 }

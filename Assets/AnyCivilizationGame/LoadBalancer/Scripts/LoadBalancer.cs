@@ -144,8 +144,9 @@ public class LoadBalancer : Singleton<LoadBalancer>
 
     private void OnServerDisconnected(int connectionId)
     {
-        if (clients.ContainsKey(connectionId))
+        if (clients.TryGetValue(connectionId, out var client))
         {
+            client.OnDisconnected();
             clients.Remove(connectionId);
         }
         Debug.Log("Client DisConnected: " + connectionId.ToString());
@@ -186,7 +187,7 @@ public class LoadBalancer : Singleton<LoadBalancer>
         // Disconnect old client
         if (clients.ContainsKey(connectionId))
         {
-            clients[connectionId].Disconnect();
+            clients[connectionId].OnDisconnected();
             clients.Remove(connectionId);
         }
 

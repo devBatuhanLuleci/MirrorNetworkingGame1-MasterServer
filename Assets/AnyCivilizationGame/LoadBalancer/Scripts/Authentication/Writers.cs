@@ -36,6 +36,42 @@ namespace ACGAuthentication
         #endregion
         #region Lobby Writers
 
+
+        public static void WriteOnDisconnectedLobbyRoomEvent(this NetworkWriter writer, OnDisconnectedLobbyRoom req)
+        {
+            // write MyType data here
+            writer.WriteLobbyPlayer(req.LobbyPlayer);
+        }
+
+        public static OnDisconnectedLobbyRoom ReadOnDisconnectedLobbyRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new OnDisconnectedLobbyRoom(reader.ReadLobbyPlayer());
+        }
+        public static void WriteMaxPlayerErrorEvent(this NetworkWriter writer, MaxPlayerError req)
+        {
+            // write MyType data here
+        }
+
+        public static MaxPlayerError ReadMaxPlayerErrorEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new MaxPlayerError();
+        }
+
+        public static void WritePlayerJoinedToLobbyRoomEvent(this NetworkWriter writer, PlayerJoinedToLobbyRoom req)
+        {
+            // write MyType data here
+            writer.WriteInt(req.RoomCode);
+            writer.WriteArray<LobbyPlayer>(req.LobbyPlayers);
+            writer.WriteLobbyPlayer(req.LobbyPlayer);
+        }
+
+        public static PlayerJoinedToLobbyRoom ReadPlayerJoinedToLobbyRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new PlayerJoinedToLobbyRoom(reader.ReadInt(), reader.ReadArray<LobbyPlayer>(), reader.ReadLobbyPlayer());
+        }
         public static void WriteLobbyPlayer(this NetworkWriter writer, LobbyPlayer req)
         {
             // write MyType data here
@@ -83,7 +119,7 @@ namespace ACGAuthentication
         public static CreateLobbyRoom ReadCreateLobbyRoomEvent(this NetworkReader reader)
         {
             // read MyType data here
-            return new CreateLobbyRoom(reader.ReadInt(),reader.ReadLobbyPlayer());
+            return new CreateLobbyRoom(reader.ReadInt(), reader.ReadLobbyPlayer());
         }
         public static void WriteGetFriendsEvent(this NetworkWriter writer, GetPlayersEvent req)
         {
