@@ -55,35 +55,47 @@ public class SpawnServer : EventManagerBase
             if (roomObj.CanJoin)
             {
                 roomObj.AddPlayer(client);
-                roomObj.Start(this);
+                roomObj.Start();
                 return;
             }
         }
+        var newRoom = StartNewRoom();
+        newRoom.AddPlayer(client);     
+
+    }
+
+    private Room StartNewRoom()
+    {
         // if not match any room start new room.
         var gameServer = StartGameServer(currentPort);
 
         if (gameServer != null)
         {
             var newRoom = new Room(currentPort, gameServer);
-            newRoom.AddPlayer(client);
             rooms.Add(currentPort, newRoom);
             currentPort++;
+            return newRoom;
         }
         else
         {
             throw new Exception("Game Server can't start.");
         }
-
     }
 
-
-    internal void NewMatch(LobbyRoom room)
+    internal Room NewMatch(LobbyRoom room)
     {
         // TODO: if there is no opened room
         // Start new server and add all players to this room
         // else create and add all players to this room
+        var newRoom = StartNewRoom();
 
-
+    
+        for (int i = 0; i < room.Players.Count; i++)
+        {
+            var player = room.Players[i];
+            newRoom.AddPlayer(player.client);
+        }
+        return newRoom;
     }
     #endregion
 

@@ -16,7 +16,21 @@ public class Room
     public string Host { get; private set; } = "localhost";
     public ClientPeer peer { get; private set; }
 
-    public RoomState State { get; private set; } = RoomState.Preparing;
+    public RoomState State
+    {
+        get { return state; }
+        private set
+        {
+            state = value;
+            if (OnRoomStateChange != null)
+            {
+                OnRoomStateChange(state);
+            }
+        }
+    }
+    private RoomState state = RoomState.Preparing;
+
+    public Action<RoomState> OnRoomStateChange;
 
     public bool CanJoin
     {
@@ -74,24 +88,21 @@ public class Room
 
     }
 
-    internal void ConnectPlayers(SpawnServer spawnServer)
+    internal void ConnectPlayers()
     {
-        players.ForEach(el => ConnectPlayer(el, spawnServer));
-        if (State == RoomState.Ready)
-        {
-            State = RoomState.Started;
-        }
+        players.ForEach(el => ConnectPlayer(el));
     }
 
-    internal void ConnectPlayer(ClientPeer player, SpawnServer spawnServer)
+    internal void ConnectPlayer(ClientPeer player)
     {
-        spawnServer.SendServerRequestToClient(player, new ConnectToGameServerEvent(Port, Host));      
+        var spawnServer = LoadBalancer.Instance.SpawnServer;
+        spawnServer.SendServerRequestToClient(player, new ConnectToGameServerEvent(Port, Host));
     }
 
-    public void Start(SpawnServer spawnServer)
+    public void Start()
     {
         // TODO: Redirect players and start server.   
-        ConnectPlayers(spawnServer);   
+        ConnectPlayers();
     }
 
     public void Ready()

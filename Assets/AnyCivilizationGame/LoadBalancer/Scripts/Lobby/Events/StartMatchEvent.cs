@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using WalletConnectSharp.Core.Events;
 
-public class StartMatchEvent : IResponseEvent
+public class CreateLobbyRoom : IResponseEvent
 {
  
-    public StartMatchEvent()
+    public CreateLobbyRoom()
     {
     }
     public void Invoke(EventManagerBase authenticationManager, ClientPeer client)
     {
         Debug.Log("StartMatch Invoked.");
         var lobbyManager = authenticationManager as LobbyManager;
-        lobbyManager.StartMatchLobby(client);
+        lobbyManager.CreateLobbyRoom(client);
     }
 }

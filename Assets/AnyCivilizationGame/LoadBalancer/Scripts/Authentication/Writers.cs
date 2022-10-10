@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿
+using Mirror;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -34,19 +35,70 @@ namespace ACGAuthentication
             return new OnReadyEvent(reader.ReadInt());
         }
         #endregion
-        #region Lobby Writers
+        #region Lobby 
+        public static void WriteStartLobbyRoomEvent(this NetworkWriter writer, StartLobbyRoom req)
+        {
+            // write MyType data here
+        }
 
+        public static StartLobbyRoom ReadStartLobbyRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new StartLobbyRoom();
+        }
+        public static void WriteThereIsNoRoomEvent(this NetworkWriter writer, ThereIsNoRoom req)
+        {
+            // write MyType data here
+            writer.WriteInt(req.RoomId);
+        }
 
-        public static void WriteOnDisconnectedLobbyRoomEvent(this NetworkWriter writer, OnDisconnectedLobbyRoom req)
+        public static ThereIsNoRoom ReadThereIsNoRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new ThereIsNoRoom(reader.ReadInt());
+        }
+        public static void WriteLeaveRoomEvent(this NetworkWriter writer, LeaveRoom req)
+        {
+            // write MyType data here
+        }
+
+        public static LeaveRoom ReadLeaveRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new LeaveRoom();
+        }
+
+        public static void WriteReadyStateChangedEvent(this NetworkWriter writer, ReadyStateChanged req)
+        {
+            // write MyType data here
+            writer.WriteLobbyPlayer(req.lobbyPlayer);
+        }
+
+        public static ReadyStateChanged ReadReadyStateChangedEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new ReadyStateChanged(reader.ReadLobbyPlayer());
+        }
+        public static void WriteReadyEvent(this NetworkWriter writer, ReadyStateChange req)
+        {
+            // write MyType data here
+        }
+
+        public static ReadyStateChange ReadReadyEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new ReadyStateChange();
+        }
+        public static void WriteOnDisconnectedLobbyRoomEvent(this NetworkWriter writer, OnLeaveLobbyRoom req)
         {
             // write MyType data here
             writer.WriteLobbyPlayer(req.LobbyPlayer);
         }
 
-        public static OnDisconnectedLobbyRoom ReadOnDisconnectedLobbyRoomEvent(this NetworkReader reader)
+        public static OnLeaveLobbyRoom ReadOnDisconnectedLobbyRoomEvent(this NetworkReader reader)
         {
             // read MyType data here
-            return new OnDisconnectedLobbyRoom(reader.ReadLobbyPlayer());
+            return new OnLeaveLobbyRoom(reader.ReadLobbyPlayer());
         }
         public static void WriteMaxPlayerErrorEvent(this NetworkWriter writer, MaxPlayerError req)
         {
@@ -78,12 +130,15 @@ namespace ACGAuthentication
             writer.WriteString(req.UserName);
             writer.WriteBool(req.IsLeader);
             writer.WriteBool(req.IsReady);
+            writer.WriteInt(req.RoomId);
         }
 
         public static LobbyPlayer ReadLobbyPlayer(this NetworkReader reader)
         {
             // read MyType data here
-            return new LobbyPlayer(reader.ReadString(), reader.ReadBool(), reader.ReadBool());
+            var player = new LobbyPlayer(reader.ReadString(), reader.ReadBool(), reader.ReadBool());
+            player.RoomId = reader.ReadInt();
+            return player;
         }
         public static void WriteJoinedToLobbyRoomEvent(this NetworkWriter writer, NewPlayerJoinedToLobbyRoom req)
         {
@@ -109,17 +164,17 @@ namespace ACGAuthentication
         }
 
 
-        public static void WriteCreateLobbyRoomEvent(this NetworkWriter writer, CreateLobbyRoom req)
+        public static void WriteCreateLobbyRoomEvent(this NetworkWriter writer, LobbyRoomCreated req)
         {
             // write MyType data here
             writer.WriteInt(req.RoomCode);
             writer.WriteLobbyPlayer(req.LobbyPlayer);
         }
 
-        public static CreateLobbyRoom ReadCreateLobbyRoomEvent(this NetworkReader reader)
+        public static LobbyRoomCreated ReadCreateLobbyRoomEvent(this NetworkReader reader)
         {
             // read MyType data here
-            return new CreateLobbyRoom(reader.ReadInt(), reader.ReadLobbyPlayer());
+            return new LobbyRoomCreated(reader.ReadInt(), reader.ReadLobbyPlayer());
         }
         public static void WriteGetFriendsEvent(this NetworkWriter writer, GetPlayersEvent req)
         {
@@ -133,15 +188,15 @@ namespace ACGAuthentication
 
 
         }
-        public static void WriteStartMatchEvent(this NetworkWriter writer, StartMatchEvent req)
+        public static void WriteStartMatchEvent(this NetworkWriter writer, CreateLobbyRoom req)
         {
             // write MyType data here
         }
 
-        public static StartMatchEvent ReadStartMatchEvent(this NetworkReader reader)
+        public static CreateLobbyRoom ReadStartMatchEvent(this NetworkReader reader)
         {
             // read MyType data here
-            return new StartMatchEvent();
+            return new CreateLobbyRoom();
         }
         #endregion
         #region Authentication Writers

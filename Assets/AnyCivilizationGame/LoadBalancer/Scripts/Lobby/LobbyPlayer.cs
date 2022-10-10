@@ -7,8 +7,9 @@ public class LobbyPlayer
     public bool IsLeader { get; private set; } = false;
     public bool IsReady { get; set; } = false;
     public string UserName { get; private set; }
+    public int RoomId { get; set; }
 
-    public Action<LobbyPlayer> OnClientDisconnected;
+    public Action<LobbyPlayer> OnDisconnected;
     public LobbyPlayer(string userName)
     {
         UserName = userName;
@@ -19,7 +20,7 @@ public class LobbyPlayer
         this.client.OnDissconnect += OnPeerDisconnected;
     }
 
-    public LobbyPlayer(ClientPeer client, string userName, bool isLeader) : this(client, userName)
+    public LobbyPlayer(ClientPeer client, string userName, bool isLeader = false) : this(client, userName)
     {
         IsLeader = isLeader;
     }
@@ -32,15 +33,20 @@ public class LobbyPlayer
 
     ~LobbyPlayer()
     {
-        OnClientDisconnected -= OnClientDisconnected;
+        OnDisconnected -= OnDisconnected;
     }
     private void OnPeerDisconnected(ClientPeer clientPeer)
     {
-        Debug.Log("LobbyPlayer OnPeerDisconnected");
-        if (OnClientDisconnected != null)
-            OnClientDisconnected.Invoke(this);
+        //Debug.Log("LobbyPlayer OnPeerDisconnected");
+        if (OnDisconnected != null)
+            OnDisconnected.Invoke(this);
     }
 
+    public void Reset()
+    {
+        IsLeader = false;
+        IsReady = false;
+    }
 }
 
 

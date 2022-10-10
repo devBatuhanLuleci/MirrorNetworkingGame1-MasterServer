@@ -1,9 +1,9 @@
 using ACGAuthentication;
 
-public class OnDisconnectedLobbyRoom : IEvent
+public class OnLeaveLobbyRoom : IEvent
 {
     public LobbyPlayer LobbyPlayer { get; private set; }
-	public OnDisconnectedLobbyRoom(LobbyPlayer lobbyPlayer)
+	public OnLeaveLobbyRoom(LobbyPlayer lobbyPlayer)
 	{
 		this.LobbyPlayer = lobbyPlayer;
 	}

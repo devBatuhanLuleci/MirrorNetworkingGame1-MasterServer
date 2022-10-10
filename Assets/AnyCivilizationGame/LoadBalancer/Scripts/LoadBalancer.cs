@@ -149,7 +149,7 @@ public class LoadBalancer : Singleton<LoadBalancer>
             client.OnDisconnected();
             clients.Remove(connectionId);
         }
-        Debug.Log("Client DisConnected: " + connectionId.ToString());
+        //Debug.Log("Client DisConnected: " + connectionId.ToString());
 
     }
 
