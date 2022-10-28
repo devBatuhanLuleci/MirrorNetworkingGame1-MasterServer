@@ -1,10 +1,7 @@
 using ACGAuthentication;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LobbyManager : EventManagerBase
 {
@@ -42,10 +39,10 @@ public class LobbyManager : EventManagerBase
         responsesByType.Add((byte)LobbyEvent.LeaveRoom, typeof(LeaveRoom));
         responsesByType.Add((byte)LobbyEvent.ThereIsNoRoom, typeof(ThereIsNoRoom));
         responsesByType.Add((byte)LobbyEvent.StartLobbyRoom, typeof(StartLobbyRoom));
-        
+
         return responsesByType;
     }
-  
+
     public void CreateLobbyRoom(ClientPeer client)
     {
         var randomName = "user" + UnityEngine.Random.Range(1, 999);
@@ -89,7 +86,7 @@ public class LobbyManager : EventManagerBase
             SendServerRequestToClient(client, ev);
         }
     }
-   
+
     public void StartMatch(ClientPeer client)
     {
         var room = GetRoom(client);

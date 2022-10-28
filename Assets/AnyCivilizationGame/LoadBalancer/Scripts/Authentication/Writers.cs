@@ -2,8 +2,6 @@
 using Mirror;
 using System;
 using System.Reflection;
-using UnityEngine;
-using static UnityEditor.LightingExplorerTableColumn;
 
 namespace ACGAuthentication
 {
