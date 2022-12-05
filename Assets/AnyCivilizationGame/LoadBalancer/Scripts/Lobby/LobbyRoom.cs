@@ -1,7 +1,5 @@
 ﻿using ACGAuthentication;
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class LobbyRoom
@@ -16,7 +14,7 @@ public class LobbyRoom
     public LobbyRoom(int id, LobbyManager lobbyManager)
     {
         Id = id;
-        MaxPlayer = 2;
+        MaxPlayer = ServerSettings.Instance.RoomSettings.MaxPlayerCount;
         Players = new List<LobbyPlayer>();
         this.lobbyManager = lobbyManager;
     }
@@ -28,9 +26,9 @@ public class LobbyRoom
     }
     ~LobbyRoom()
     {
-        if(roomInstance != null)
+        if (roomInstance != null)
         {
-            roomInstance.OnRoomStateChange -= OnRoomStateChange;    
+            roomInstance.OnRoomStateChange -= OnRoomStateChange;
         }
     }
 
@@ -134,6 +132,10 @@ public class LobbyRoom
         RemovePlayer(player);
         var ev = new OnLeaveLobbyRoom(player);
         NotifyRoom(ev);
+        if (roomInstance != null && roomInstance.Started && Players.Count == 0)
+        {
+            roomInstance.CloseRoom();
+        }
     }
     private void RemovePlayer(LobbyPlayer joindPlayer)
     {
@@ -153,14 +155,13 @@ public class LobbyRoom
         if (lobbyPlayer.IsLeader)
         {
             Debug.Log("Room player is Leader");
-            Players.ForEach(el =>
-            {
-                var ev = new OnLeaveLobbyRoom(el);
-                lobbyManager.SendServerRequestToClient(el.client, ev);
-                lobbyPlayer.Reset();
-            });
-            Players.Clear();
-            lobbyManager.RemoveRoom(this);
+            lobbyPlayer.Reset();
+            Close();
+
+        }
+        else if (Players.Count == 1)
+        {
+            Close();
         }
         else
         {
@@ -172,6 +173,18 @@ public class LobbyRoom
         }
     }
 
+    public void Close()
+    {
+        Debug.Log("Close room " + Id);
+        Players.ForEach(el =>
+        {
+            var ev = new OnLeaveLobbyRoom(el);
+            lobbyManager.SendServerRequestToClient(el.client, ev);
+        });
+        Players.Clear();
+        lobbyManager.RemoveRoom(this);
+    }
+
 
     #endregion
 
@@ -180,7 +193,7 @@ public class LobbyRoom
     {
         switch (state)
         {
-            case RoomState.Preparing:               
+            case RoomState.Preparing:
                 break;
             case RoomState.Ready:
                 roomInstance.Start();

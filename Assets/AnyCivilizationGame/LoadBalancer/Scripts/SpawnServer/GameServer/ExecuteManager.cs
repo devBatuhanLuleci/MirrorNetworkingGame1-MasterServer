@@ -9,28 +9,23 @@ using UnityEngine;
 public class ExecuteManager
 {
 
-    public static Process ExecuteCommand(string command)
+    public static Process ExecuteCommand(string commands)
     {
         string dataPath = Application.dataPath.Replace('/', '\\');
 #if UNITY_EDITOR
         UnityEngine.Debug.Log("dataPath" + dataPath);
         string workingDirevtory = Path.Combine(Directory.GetParent(dataPath).FullName, @"Builds\Windows\GameServer\GameServer.exe");
 
-        // string workingDirevtory = $"cmd /k cd {dataPath}/../Builds/Windows/GameServer && GameServer.exe";
 #else
         string   workingDirevtory = Path.Combine(Directory.GetParent(Directory.GetParent(dataPath).FullName).FullName, @"GameServer\GameServer.exe");
 
 #endif
-        UnityEngine.Debug.Log("workingDirevtory: " + workingDirevtory);
+        UnityEngine.Debug.Log("workingDirevtory: " + workingDirevtory + " Commands: "+commands);
 
         try
-        {
-            /* UnityEngine.Debug.Log("dataPath" + dataPath);
-               UnityEngine.Debug.Log("workingDirevtory" + workingDirevtory);
-               workingDirevtory = @"C:\Users\Exop\Documents\Unity\Game Room\Builds\Windows\GameServer\GameServer.exe";
-               return Process.Start("cmd.exe", workingDirevtory + " " + command);*/
+        {   
             ProcessStartInfo ps1 = new ProcessStartInfo(workingDirevtory);
-            ps1.Arguments = $"-server -port {command}";
+            ps1.Arguments = commands; 
             return Process.Start(ps1);
 
         }

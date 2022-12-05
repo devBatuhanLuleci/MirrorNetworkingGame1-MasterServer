@@ -25,6 +25,7 @@ public class SpawnServer : EventManagerBase
         var responseTypes = new Dictionary<byte, Type>();
         responseTypes.Add((byte)SpawnServerEvent.Ready, typeof(OnReadyEvent));
         responseTypes.Add((byte)SpawnServerEvent.ConnectToGameServer, typeof(ConnectToGameServerEvent));
+        responseTypes.Add((byte)SpawnServerEvent.CloseRoom, typeof(CloseRoomEvent));
         return responseTypes;
     }
 
@@ -35,13 +36,19 @@ public class SpawnServer : EventManagerBase
             var newRoom = new Room((ushort)port, roomPlayer);
             rooms.Add((ushort)port, newRoom);
         }
-        rooms[(ushort)port].Ready();
+        rooms[(ushort)port].Ready(roomPlayer);
     }
 
 
     public Process StartGameServer(int port)
     {
-        return ExecuteManager.ExecuteCommand(port.ToString());
+        var args = "";
+        if (ServerSettings.Instance.RoomSettings.Batchmode)
+        {
+            args += $"-batchmode ";
+        }
+        args += $"-server -port {port} ";
+        return ExecuteManager.ExecuteCommand(args);
     }
     #region Match
     public void NewMatch(ClientPeer client)
@@ -60,8 +67,15 @@ public class SpawnServer : EventManagerBase
             }
         }
         var newRoom = StartNewRoom();
-        newRoom.AddPlayer(client);     
+        newRoom.AddPlayer(client);
 
+    }
+    public void StopMatch(ushort port)
+    {
+        if (rooms.TryGetValue(port, out var room))
+        {
+            room.CloseRoom();
+        }
     }
 
     private Room StartNewRoom()
@@ -89,7 +103,7 @@ public class SpawnServer : EventManagerBase
         // else create and add all players to this room
         var newRoom = StartNewRoom();
 
-    
+
         for (int i = 0; i < room.Players.Count; i++)
         {
             var player = room.Players[i];

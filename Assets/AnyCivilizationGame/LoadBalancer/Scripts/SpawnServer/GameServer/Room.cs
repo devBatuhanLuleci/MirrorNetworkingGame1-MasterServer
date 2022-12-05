@@ -39,19 +39,24 @@ public class Room
 
     #region Private Fields
     private List<ClientPeer> players = new List<ClientPeer>();
+    SpawnServer SpawnServer;
 
     #endregion
 
     #region Instance
     public Process GameServer => gameServer;
+
+    public bool Started { get { return state == RoomState.Started || state == RoomState.Ready; } }
+
     private Process gameServer;
     #endregion
 
     #region Constructurs
     public Room()
     {
+        SpawnServer = LoadBalancer.Instance.SpawnServer;
         Host = ServerSettings.Instance.GameServers[0];
-        Debug.Log($"ServerSettings Host: {Host}");
+        //Debug.Log($"ServerSettings Host: {Host}");
 
         Debug.Log($"a new romm is created at {Port} port and {Host}");
     }
@@ -72,7 +77,7 @@ public class Room
     {
         players.Add(player);
         player.OnDissconnect += RemovePlayer;
-        Debug.Log($"{player} add to {Port} room");
+        //Debug.Log($"{player} add to {Port} room");
     }
     public void RemovePlayer(ClientPeer player)
     {
@@ -81,10 +86,9 @@ public class Room
     }
     public void CloseRoom()
     {
-        // TODO: not direct kill send kill message
-        // if can't response from room kill the room instance
-        GameServer.Kill();
-
+        //GameServer.Kill();
+        var ev = new CloseRoomEvent();
+        SpawnServer.SendServerRequestToClient(peer, ev);
     }
 
     internal void ConnectPlayers()
@@ -94,8 +98,7 @@ public class Room
 
     internal void ConnectPlayer(ClientPeer player)
     {
-        var spawnServer = LoadBalancer.Instance.SpawnServer;
-        spawnServer.SendServerRequestToClient(player, new ConnectToGameServerEvent(Port, Host));
+        SpawnServer.SendServerRequestToClient(player, new ConnectToGameServerEvent(Port, Host));
     }
 
     public void Start()
@@ -110,4 +113,9 @@ public class Room
         Debug.Log($"{Port} room is ready");
     }
 
+    internal void Ready(ClientPeer roomPlayer)
+    {
+        peer = roomPlayer;
+        Ready();
+    }
 }

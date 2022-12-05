@@ -11,6 +11,7 @@ public class ClientPeer : PeerBase
 
     public ClientPeer(LoadBalancer loadBalancer, int connectionId) : base(loadBalancer, connectionId)
     {
+
     }
 
     #region Public Fiealds
@@ -25,7 +26,7 @@ public class ClientPeer : PeerBase
     public override void OnDisconnected()
     {
         base.OnDisconnected();
-        //Debug.Log("ClientPeer OnDisconnected");
+        Debug.Log("ClientPeer OnDisconnected");
         if (OnDissconnect != null)
             OnDissconnect.Invoke(this);
     }

@@ -9,6 +9,16 @@ namespace ACGAuthentication
     {
         #region Spawn Server Writers
 
+        public static void WriteCloseRoomEvent(this NetworkWriter writer, CloseRoomEvent req)
+        {
+            // write MyType data here
+        }
+
+        public static CloseRoomEvent ReadCloseRoomEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new CloseRoomEvent();
+        }
         public static void WriteConnectToGameServerEvent(this NetworkWriter writer, ConnectToGameServerEvent req)
         {
             // write MyType data here

@@ -37,7 +37,7 @@ public class LobbyPlayer
     }
     private void OnPeerDisconnected(ClientPeer clientPeer)
     {
-        //Debug.Log("LobbyPlayer OnPeerDisconnected");
+        Debug.Log("LobbyPlayer OnPeerDisconnected");
         if (OnDisconnected != null)
             OnDisconnected.Invoke(this);
     }
