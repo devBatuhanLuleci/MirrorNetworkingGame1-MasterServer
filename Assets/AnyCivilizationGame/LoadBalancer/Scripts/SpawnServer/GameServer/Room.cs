@@ -50,14 +50,18 @@ public class Room
     #region Constructurs
     public Room()
     {
+        Host = ServerSettings.Instance.GameServers[0];
+        Debug.Log($"ServerSettings Host: {Host}");
+
+        Debug.Log($"a new romm is created at {Port} port and {Host}");
     }
-    public Room(ushort port, Process server)
+    public Room(ushort port, Process server) : this()
     {
         Port = port;
         gameServer = server;
     }
 
-    public Room(ushort port, ClientPeer roomClient)
+    public Room(ushort port, ClientPeer roomClient) : this()
     {
         Port = port;
         peer = roomClient;
@@ -105,4 +109,5 @@ public class Room
         State = RoomState.Ready;
         Debug.Log($"{Port} room is ready");
     }
+
 }

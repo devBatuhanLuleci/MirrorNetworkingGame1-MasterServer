@@ -16,7 +16,7 @@ public class LobbyRoom
     public LobbyRoom(int id, LobbyManager lobbyManager)
     {
         Id = id;
-        MaxPlayer = 3;
+        MaxPlayer = 2;
         Players = new List<LobbyPlayer>();
         this.lobbyManager = lobbyManager;
     }
