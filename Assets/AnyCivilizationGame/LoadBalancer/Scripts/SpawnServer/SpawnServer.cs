@@ -48,6 +48,7 @@ public class SpawnServer : EventManagerBase
             args += $"-batchmode ";
         }
         args += $"-server -port {port} ";
+        args += ServerSettings.Instance.GameServerBootArgs;
         return ExecuteManager.ExecuteCommand(args);
     }
     #region Match

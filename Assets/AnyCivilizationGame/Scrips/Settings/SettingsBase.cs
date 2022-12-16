@@ -17,14 +17,24 @@ public class SettingsBase<T> where T : new()
         }
     }
 
-
+    /// <summary>
+    /// Read <typeparamref name="T"/> based class file.
+    /// or create a new file when file is not found
+    /// </summary>
     private static T Init()
     {
         string dataPath = Application.dataPath.Replace('/', '\\');
         string workingDirevtory = Path.Combine(Directory.GetParent(dataPath).FullName, @"Configs");
+        var type = typeof(T);
+        var fileName = type.FullName + ".config";
+        // Get prefix from Environment.
+        // when T is not an Environment instance
+        if (type != typeof(Envairment))
+        {
+            fileName = Envairment.Instance.DevelopmentMode + fileName;
+        }
 
-        var tmp = new T();
-        var filePath = Path.Combine(workingDirevtory, tmp.GetType().Name + ".config");
+        var filePath = Path.Combine(workingDirevtory, fileName);
 
         if (!File.Exists(filePath)) { Directory.CreateDirectory(workingDirevtory); }
         return FileManager.Read<T>(filePath);
