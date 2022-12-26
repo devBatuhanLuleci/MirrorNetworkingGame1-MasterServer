@@ -52,23 +52,23 @@ public class Room
     #endregion
 
     #region Constructurs
-    public Room()
+    public Room(ushort port)
     {
         SpawnServer = LoadBalancer.Instance.SpawnServer;
         Host = ServerSettings.Instance.GameServers[0];
+        Port = port;
+
         //Debug.Log($"ServerSettings Host: {Host}");
 
         Debug.Log($"a new romm is created at {Port} port and {Host}");
     }
-    public Room(ushort port, Process server) : this()
+    public Room(ushort port, Process server) : this(port)
     {
-        Port = port;
         gameServer = server;
     }
 
-    public Room(ushort port, ClientPeer roomClient) : this()
+    public Room(ushort port, ClientPeer roomClient) : this(port)
     {
-        Port = port;
         peer = roomClient;
     }
     #endregion

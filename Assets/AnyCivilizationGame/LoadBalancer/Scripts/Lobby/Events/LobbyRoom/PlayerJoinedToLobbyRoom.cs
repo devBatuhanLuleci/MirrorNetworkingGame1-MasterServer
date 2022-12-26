@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Oday? kuran client’e oda ile ilgili bilgileri gönderir. 
+/// </summary>
 public class PlayerJoinedToLobbyRoom : IEvent
 {
     public int RoomCode { get; private set; }

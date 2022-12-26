@@ -1,6 +1,5 @@
-﻿using System;
-
-[Serializable]
+﻿
+[System.Serializable]
 public class RoomSettings
 {
     public int MaxPlayerCount = 2;

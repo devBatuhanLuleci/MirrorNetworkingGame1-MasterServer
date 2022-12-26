@@ -78,7 +78,7 @@ public class LobbyRoom
 
         Players.Add(lobbyPlayer);
         lobbyPlayer.RoomId = Id;
-        Debug.Log($"AddNewPlayer RoomId {lobbyPlayer.RoomId} Id: {Id}");
+        Debug.Log($"AddNewPlayer RoomId {lobbyPlayer.RoomId}");
     }
     private void NewPlayerInfoSendToRoom(LobbyPlayer newPlayer)
     {

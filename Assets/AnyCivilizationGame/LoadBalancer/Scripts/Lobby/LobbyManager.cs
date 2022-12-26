@@ -42,7 +42,12 @@ public class LobbyManager : EventManagerBase
 
         return responsesByType;
     }
-
+    /// <summary>
+    /// Client'lar tarf?ndan bir oda açmak için kullan?l?r. 
+    ///  Oday? açan kullan?c? odan?n sahibi olarak belirlenir ve
+    ///  kullan?c?ya yeni aç?lan odan?n payala??labilir bir ID’sini gönderir.
+    /// </summary>
+    /// <param name="client"></param>
     public void CreateLobbyRoom(ClientPeer client)
     {
         var randomName = "user" + UnityEngine.Random.Range(1, 999);
@@ -62,6 +67,14 @@ public class LobbyManager : EventManagerBase
         SendServerRequestToClient(client, ev);
 
     }
+
+    /// <summary>
+    /// Payla??labilir RoomId ile bir odaya ba?lanmay? sa?lar. 
+    /// E?er böylebir oda aç?kde?ilse gerekli hata bilgisi kullan?c?ya gönderirilir.
+    /// Oyuncu odaya ba?land?ktan sonra odadaki herkese bilgi gönderilir.
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="roomId"></param>
     public void JoinMatchLobbyRoom(ClientPeer client, int roomId)
     {
         if (Rooms.TryGetValue(roomId, out var room))
@@ -87,6 +100,11 @@ public class LobbyManager : EventManagerBase
         }
     }
 
+    /// <summary>
+    /// Daha önceden aç?lm?? olan bir odadaki oynu ba?latmaya yarar. 
+    /// Bu methodu ça??ran client’?n odan?n kurucusu olmas? gerekmektedir.
+    /// </summary>
+    /// <param name="client"></param>
     public void StartMatch(ClientPeer client)
     {
         var room = GetRoom(client);
@@ -104,6 +122,10 @@ public class LobbyManager : EventManagerBase
         else
             Debug.Log("StartMatch player is null");
     }
+    /// <summary>
+    /// Oyundan bir clientin ayr?lmas? için kullan?l?r. 
+    /// </summary>
+    /// <param name="client"></param>
     public void LeaveRoom(ClientPeer client)
     {
         var room = GetRoom(client);
@@ -122,7 +144,10 @@ public class LobbyManager : EventManagerBase
             Debug.Log("player is null");
 
     }
-
+    /// <summary>
+    /// Belirtilen oday? serverdan kald?r?r. 
+    /// </summary>
+    /// <param name="room"></param>
     public void RemoveRoom(LobbyRoom room)
     {
         if (Rooms.ContainsKey(room.Id))
@@ -130,6 +155,10 @@ public class LobbyManager : EventManagerBase
             Rooms.Remove(room.Id);
         }
     }
+    /// <summary>
+    /// Client’i serverdaki Players listedinden ç?kar?r. 
+    /// </summary>
+    /// <param name="client"></param>
     private void RemovePlayer(LobbyPlayer client)
     {
         if (Players.ContainsKey(client.client))
@@ -137,6 +166,10 @@ public class LobbyManager : EventManagerBase
             Players.Remove(client.client);
         }
     }
+    /// <summary>
+    /// Oda?n?n haz?r oldu?unu belirtme için kullan?lan method. 
+    /// </summary>
+    /// <param name="client"></param>
     internal void ReadyState(ClientPeer client)
     {
         var room = GetRoom(client);
@@ -147,6 +180,11 @@ public class LobbyManager : EventManagerBase
         }
         room.Ready(client);
     }
+    /// <summary>
+    /// Client için LobbyMnager daki LobbyPlayer’? getiren method. 
+    /// </summary>
+    /// <param name="client"></param>
+    /// <returns></returns>
     private LobbyPlayer GetPlayer(ClientPeer client)
     {
         if (Players.TryGetValue(client, out var lobbyPlayer))
@@ -155,6 +193,13 @@ public class LobbyManager : EventManagerBase
         }
         return null;
     }
+    /// <summary>
+    /// ClientPeer için E?er varsa LobbyPlayer’? getirir yoksa olu?turur. 
+    /// </summary>
+    /// <param name="client"></param>
+    /// <param name="name"></param>
+    /// <param name="isLeader"></param>
+    /// <returns></returns>
     private LobbyPlayer GetOrCreatePlayer(ClientPeer client, string name, bool isLeader = false)
     {
         var player = GetPlayer(client);
@@ -164,6 +209,11 @@ public class LobbyManager : EventManagerBase
         }
         return player;
     }
+    /// <summary>
+    /// ClientPeer ‘?n içinde oldu?u LobbyRoom’u getirir. E?er client hiç bir odada de?ilse null döner. 
+    /// </summary>
+    /// <param name="client"></param>
+    /// <returns></returns>
     private LobbyRoom GetRoom(ClientPeer client)
     {
         var lobbyPlayer = GetPlayer(client);
