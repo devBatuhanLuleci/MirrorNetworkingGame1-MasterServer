@@ -47,6 +47,7 @@ public class SpawnServer : EventManagerBase
         {
             args += $"-batchmode ";
         }
+        args += $"-maxPlayerCount {ServerSettings.Instance.RoomSettings.MaxPlayerCount} ";
         args += $"-server -port {port} ";
         args += ServerSettings.Instance.GameServerBootArgs;
         return ExecuteManager.ExecuteCommand(args);

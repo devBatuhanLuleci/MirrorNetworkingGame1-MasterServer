@@ -197,7 +197,6 @@ public class LobbyRoom
                 break;
             case RoomState.Ready:
                 roomInstance.Start();
-
                 break;
             case RoomState.Started:
                 break;

@@ -103,8 +103,11 @@ public class Room
 
     public void Start()
     {
+        Debug.Log($"{Port} room is started");
+
         // TODO: Redirect players and start server.   
         ConnectPlayers();
+        State = RoomState.Started;
     }
 
     public void Ready()
