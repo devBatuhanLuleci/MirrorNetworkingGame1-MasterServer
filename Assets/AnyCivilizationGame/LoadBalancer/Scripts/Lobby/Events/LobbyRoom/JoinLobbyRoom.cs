@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// Payla??labilir RoomID ile bir odaya ba?lanmak için kullan?l?r. 
+/// Payla??labilir RoomID ile bir odaya ba?lanmak iï¿½in kullan?l?r. 
 /// </summary>
 public class JoinLobbyRoom : IResponseEvent
 {
