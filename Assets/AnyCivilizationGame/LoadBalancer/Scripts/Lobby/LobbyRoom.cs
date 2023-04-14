@@ -67,6 +67,7 @@ public class LobbyRoom
         {
             var ev = new MaxPlayerError();
             lobbyManager.SendServerRequestToClient(joindPlayer.client, ev);
+            //NotificationManager.SendInfoClient(joindPlayer.client,"Room is have max player count. You can't join this room.",NotificationManager.InfoType.InfoClientPopup);
             return false;
         }
         return true;

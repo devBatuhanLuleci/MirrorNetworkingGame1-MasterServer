@@ -8,7 +8,7 @@ public class NotificationManager : Singleton<NotificationManager> {
         Info, //standart Debug
         InfoClient, // serverdan Clienta Debug
         InfoServer, //Clienttan servera  Debug
-        InfoClientShow //  serverdan Clienta Popup
+        InfoClientPopup //  serverdan Clienta Popup
     }
     public static void Info (string message) {
         Debug.Log (message);
