@@ -1,5 +1,6 @@
 
 using ACGAuthentication;
+using log4net;
 using Mirror;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class LoadBalancer : Singleton<LoadBalancer>
     [SerializeField] private bool startServerOnStart = true;
     [Space]
     [SerializeField] private Transport transport;
+    private static readonly ILog log = LogManager.GetLogger(typeof(LoadBalancer));
 
 
     private bool isServer = false;
@@ -34,6 +36,8 @@ public class LoadBalancer : Singleton<LoadBalancer>
 
     private void Start()
     {
+        log.Debug($"Loadbalancer Started");
+
         Application.runInBackground = true;
         if (transport == null)
         {
@@ -158,7 +162,7 @@ public class LoadBalancer : Singleton<LoadBalancer>
 
     private void OnServerDataReceived(int connectionId, ArraySegment<byte> data, int arg3)
     {
-
+        Debug.Log("OnServerDataReceived");
 
         if (!clients.TryGetValue(connectionId, out var client))
         {
@@ -167,10 +171,13 @@ public class LoadBalancer : Singleton<LoadBalancer>
             return;
         }
 
+        if (!HandleAuth(client, data)) return;
+
         var reader = new NetworkReader(data);
         var type = reader.ReadByte(); // read message type sequens
         if (eventHandlers.TryGetValue(type, out var handler))
         {
+
             handler.HandleClientEvents(reader, client);
         }
         else
@@ -178,6 +185,22 @@ public class LoadBalancer : Singleton<LoadBalancer>
             throw new Exception($"Event handler not found! type: {type}");
         }
 
+    }
+
+    private bool HandleAuth(ClientPeer client, ArraySegment<byte> data)
+    {
+        var reader = new NetworkReader(data);
+        var typeHandler = reader.ReadByte(); // read message type sequens
+        var typeReq = reader.ReadByte(); // read message type sequens
+
+
+        if (!client.IsAuth && typeHandler != (byte)LoadBalancerEvent.Authentication && typeReq != (byte)AuthenticationEvent.Login)
+        {
+            Debug.Log("Client not auth!");
+            client.Disconnect();
+            return false;
+        }
+        return true;
     }
 
     private void OnServerConnected(int connectionId)
@@ -236,6 +259,11 @@ public class LoadBalancer : Singleton<LoadBalancer>
             return eventManagerBase as T;
         }
         return null;
+    }
+
+    internal object FindMatch(LobbyRoom lobbyRoom)
+    {
+        throw new NotImplementedException();
     }
     #endregion
 

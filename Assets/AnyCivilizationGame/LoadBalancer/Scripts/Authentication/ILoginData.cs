@@ -2,10 +2,11 @@
 {
     public interface ILoginData
     {
-        public string Email { get; set; }
-        public string MoralisId { get; set; }
+        public int Id { get; set; }
         public string WalletId { get; set; }
-        public string userName { get; set; }
+        public string Email { get; set; }
+        public string UserName { get; set; }
+        public string AccessToken { get; set; }
     }
 
 }

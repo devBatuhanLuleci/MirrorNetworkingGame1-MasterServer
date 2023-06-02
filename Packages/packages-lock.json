@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.oddworm.commandline": {
-      "version": "https://github.com/pschraut/UnityCommandLine.git#1.1.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "cf5fd7f975ae19678dc229a96f632ff45e4f2949"
-    },
     "com.unity.2d.animation": {
       "version": "7.0.8",
       "depth": 0,

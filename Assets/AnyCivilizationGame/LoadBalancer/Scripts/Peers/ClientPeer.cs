@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class ClientPeer : PeerBase
 {
+ 
+
     public Action<ClientPeer> OnDissconnect { get; set; }
 
     public ClientPeer(LoadBalancer loadBalancer, int connectionId) : base(loadBalancer, connectionId)
@@ -16,7 +18,7 @@ public class ClientPeer : PeerBase
 
     #region Public Fiealds
     public ILoginData loginData { get; set; }
-    public bool IsLogin
+    public bool IsAuth
     {
         get => !(loginData == null);
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Debug = UnityEngine.Debug;
 
 [System.Serializable]
@@ -75,6 +76,7 @@ public class Room
 
     public void AddPlayer(ClientPeer player)
     {
+        if (players.Contains(player)) return;
         players.Add(player);
         player.OnDissconnect += RemovePlayer;
         //Debug.Log($"{player} add to {Port} room");
@@ -104,10 +106,22 @@ public class Room
     public void Start()
     {
         Debug.Log($"{Port} room is started");
-
-        // TODO: Redirect players and start server.   
+        //TODO: send user info to gameserver.
+        SendTeamInfoToGameServer();
         ConnectPlayers();
         State = RoomState.Started;
+    }
+
+    private void SendTeamInfoToGameServer()
+    {
+        var teamA = players.Select(it => it.loginData.AccessToken).ToArray();
+        SpawnServer.Debug("TeamA");
+        foreach (var team in teamA)
+        {
+            SpawnServer.Debug(team);
+        }
+        var ev = new RoomInfoEvent { teamA = teamA };
+        SpawnServer.SendServerRequestToClient(peer, ev);
     }
 
     public void Ready()

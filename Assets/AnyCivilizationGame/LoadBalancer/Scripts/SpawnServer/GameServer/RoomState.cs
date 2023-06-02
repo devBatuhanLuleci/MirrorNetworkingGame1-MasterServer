@@ -1,5 +1,4 @@
 
-
 public enum RoomState : byte
 {
     Preparing = 0x01,

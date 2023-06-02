@@ -1,3 +1,4 @@
+using Assets.AnyCivilizationGame.LoadBalancer.Scripts.Authentication.Requests;
 using Mirror;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace ACGAuthentication
             var responseTypes = new Dictionary<byte, Type>();
             responseTypes.Add((byte)AuthenticationEvent.Login, typeof(LoginEvent));
             responseTypes.Add((byte)AuthenticationEvent.Create, typeof(RegisterRequest));
+            responseTypes.Add((byte)AuthenticationEvent.LoginResultEvent, typeof(LoginResultEvent));
+            
             return responseTypes;
         }
 

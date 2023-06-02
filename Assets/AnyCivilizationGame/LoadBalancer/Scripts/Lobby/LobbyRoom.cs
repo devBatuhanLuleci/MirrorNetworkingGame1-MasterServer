@@ -1,5 +1,7 @@
 ﻿using ACGAuthentication;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class LobbyRoom
@@ -11,8 +13,11 @@ public class LobbyRoom
 
     private LobbyManager lobbyManager;
     private Room roomInstance;
+    private LobbyRoomState state = LobbyRoomState.Created;
+    public LobbyRoomState State => state;
     public LobbyRoom(int id, LobbyManager lobbyManager)
     {
+        state = LobbyRoomState.Created;
         Id = id;
         MaxPlayer = ServerSettings.Instance.RoomSettings.MaxPlayerCount;
         Players = new List<LobbyPlayer>();
@@ -44,22 +49,39 @@ public class LobbyRoom
     {
         if (Players.Contains(player) && player.IsLeader && roomInstance == null)
         {
-            // TODO: start room
-            roomInstance = LoadBalancer.Instance.SpawnServer.NewMatch(this);
-            roomInstance.OnRoomStateChange += OnRoomStateChange;
-            for (int i = 0; i < Players.Count; i++)
+            // TODO: find a room or a start room
+            var match = lobbyManager.FindMatch(this);
+
+            if (match != null)
             {
-                var playerClient = Players[i].client;
-                roomInstance.AddPlayer(playerClient);
+                match.Start(this);
             }
+            else
+            {
+                state = LobbyRoomState.Started;
+            }
+
+
         }
         else
         {
             // TODO: return you cant start room response
         }
+
+        // TODO: cahange all client to seraching state
     }
 
+    private void Start()
+    {
+        roomInstance = LoadBalancer.Instance.SpawnServer.NewMatch(this);
+        roomInstance.OnRoomStateChange += OnRoomStateChange;
+    }
 
+    private void Start(LobbyRoom lobbyRoom)
+    {
+        Players.AddRange(lobbyRoom.Players);
+        Start();
+    }
 
     private bool CanJoin(LobbyPlayer joindPlayer)
     {
@@ -197,6 +219,7 @@ public class LobbyRoom
             case RoomState.Preparing:
                 break;
             case RoomState.Ready:
+                this.state = LobbyRoomState.Playing;
                 roomInstance.Start();
                 break;
             case RoomState.Started:

@@ -13,7 +13,7 @@ namespace ACGAuthentication
         public string UserName { get; set; }
         public RegisterRequest(string email, string moralisId, string walletId, string userName)
         {
-            Email = email;
+            Email = email; 
             MoralisId = moralisId;
             WalletId = walletId;
             UserName = userName;

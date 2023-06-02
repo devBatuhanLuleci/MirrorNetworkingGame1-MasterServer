@@ -1,4 +1,5 @@
 using ACGAuthentication;
+using log4net;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,22 +11,30 @@ public class SpawnServer : EventManagerBase
     public const ushort START_PORT = 3000;
     private ushort currentPort = START_PORT;
     public override LoadBalancerEvent loadBalancerEvent { get; protected set; } = LoadBalancerEvent.SpawnServer;
+    public static ILog log = LogManager.GetLogger(typeof(SpawnServer));
 
     public SpawnServer(LoadBalancer loadBalancer) : base(loadBalancer)
     {
         loadBalancer.AddEventHandler(loadBalancerEvent, this);
+        Debug("SpawnServer initilized!");
+
     }
     ~SpawnServer()
     {
         loadBalancer.RemoveEventHandler(loadBalancerEvent, this);
     }
+    public void Debug(string msg)
+    {
+        log.Debug(msg);
 
+    }
     internal override Dictionary<byte, Type> initResponseTypes()
     {
         var responseTypes = new Dictionary<byte, Type>();
         responseTypes.Add((byte)SpawnServerEvent.Ready, typeof(OnReadyEvent));
         responseTypes.Add((byte)SpawnServerEvent.ConnectToGameServer, typeof(ConnectToGameServerEvent));
         responseTypes.Add((byte)SpawnServerEvent.CloseRoom, typeof(CloseRoomEvent));
+        responseTypes.Add((byte)SpawnServerEvent.RoomInfoEvent, typeof(RoomInfoEvent));
         return responseTypes;
     }
 
@@ -105,7 +114,7 @@ public class SpawnServer : EventManagerBase
         // else create and add all players to this room
         var newRoom = StartNewRoom();
 
-
+        log.Debug($"NewMatch room player count: {room.Players.Count}");
         for (int i = 0; i < room.Players.Count; i++)
         {
             var player = room.Players[i];
