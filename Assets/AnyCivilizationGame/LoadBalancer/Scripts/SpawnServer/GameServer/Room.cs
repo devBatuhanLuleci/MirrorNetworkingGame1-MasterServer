@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -39,7 +39,7 @@ public class Room
     #endregion
 
     #region Private Fields
-    private List<ClientPeer> players = new List<ClientPeer>();
+    private Dictionary<string, List<ClientPeer>> teams = new Dictionary<string, List<ClientPeer>>();
     SpawnServer SpawnServer;
 
     #endregion
@@ -74,17 +74,27 @@ public class Room
     }
     #endregion
 
-    public void AddPlayer(ClientPeer player)
+    public void AddPlayer(ClientPeer player, string team)
     {
-        if (players.Contains(player)) return;
-        players.Add(player);
-        player.OnDissconnect += RemovePlayer;
-        //Debug.Log($"{player} add to {Port} room");
+        // eğer team yoksa oluştur.
+        if (!teams.ContainsKey(team)) teams.Add(team, new List<ClientPeer>());
+
+
+        if (teams.TryGetValue(team, out var teamObject))
+        {
+            if (teamObject.Contains(player)) return;
+            teamObject.Add(player);
+            player.OnDissconnect += RemovePlayer;
+        }
     }
     public void RemovePlayer(ClientPeer player)
     {
         player.OnDissconnect -= RemovePlayer;
-        players.Remove(player);
+
+        foreach (var team in teams)
+        {
+            team.Value.Remove(player);
+        }
     }
     public void CloseRoom()
     {
@@ -95,7 +105,10 @@ public class Room
 
     internal void ConnectPlayers()
     {
-        players.ForEach(el => ConnectPlayer(el));
+        foreach (var team in teams)
+        {
+            team.Value.ForEach(el => ConnectPlayer(el));
+        }
     }
 
     internal void ConnectPlayer(ClientPeer player)
@@ -114,13 +127,27 @@ public class Room
 
     private void SendTeamInfoToGameServer()
     {
-        var teamA = players.Select(it => it.loginData.AccessToken).ToArray();
-        SpawnServer.Debug("TeamA");
-        foreach (var team in teamA)
+        var isA = true;
+        var ev = new RoomInfoEvent { };
+        foreach (var team in teams)
         {
-            SpawnServer.Debug(team);
+            var teamTokens = team.Value.Select(it => it.loginData.AccessToken).ToArray();
+            SpawnServer.Debug(team.Key);
+            foreach (var token in teamTokens)
+            {
+                SpawnServer.Debug(token);
+            }
+            if (isA) ev.teamA = teamTokens;
+            else ev.teamB = teamTokens;
+
+            foreach (var token in teamTokens)
+            {
+                var teamText = isA ? "TeamA" : "TeamB";
+                Debug.Log($"{teamText}: {token}");
+            }
+            isA = false;
         }
-        var ev = new RoomInfoEvent { teamA = teamA };
+
         SpawnServer.SendServerRequestToClient(peer, ev);
     }
 

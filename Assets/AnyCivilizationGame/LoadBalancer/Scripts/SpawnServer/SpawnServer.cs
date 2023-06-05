@@ -62,25 +62,7 @@ public class SpawnServer : EventManagerBase
         return ExecuteManager.ExecuteCommand(args);
     }
     #region Match
-    public void NewMatch(ClientPeer client)
-    {
-        // TODO:  Start new game server and forward players to server
-        // match players and start room
-        // after room ready redirect the players.
-        foreach (var room in rooms)
-        {
-            var roomObj = room.Value;
-            if (roomObj.CanJoin)
-            {
-                roomObj.AddPlayer(client);
-                roomObj.Start();
-                return;
-            }
-        }
-        var newRoom = StartNewRoom();
-        newRoom.AddPlayer(client);
-
-    }
+   
     public void StopMatch(ushort port)
     {
         if (rooms.TryGetValue(port, out var room))
@@ -107,18 +89,23 @@ public class SpawnServer : EventManagerBase
         }
     }
 
-    internal Room NewMatch(LobbyRoom room)
+    internal Room NewMatch(LobbyRoom room, LobbyRoom matchedRoom)
     {
         // TODO: if there is no opened room
         // Start new server and add all players to this room
         // else create and add all players to this room
         var newRoom = StartNewRoom();
 
-        log.Debug($"NewMatch room player count: {room.Players.Count}");
+        log.Debug($"NewMatch room player counts: {room.Players.Count} -   {matchedRoom.Players.Count}");
         for (int i = 0; i < room.Players.Count; i++)
         {
             var player = room.Players[i];
-            newRoom.AddPlayer(player.client);
+            newRoom.AddPlayer(player.client,"teamA");
+        }
+        for (int i = 0; i < matchedRoom.Players.Count; i++)
+        {
+            var player = matchedRoom.Players[i];
+            newRoom.AddPlayer(player.client, "teamB");
         }
         return newRoom;
     }

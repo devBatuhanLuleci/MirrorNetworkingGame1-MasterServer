@@ -69,18 +69,12 @@ public class LobbyRoom
         }
 
         // TODO: cahange all client to seraching state
-    }
-
-    private void Start()
-    {
-        roomInstance = LoadBalancer.Instance.SpawnServer.NewMatch(this);
-        roomInstance.OnRoomStateChange += OnRoomStateChange;
-    }
+    } 
 
     private void Start(LobbyRoom lobbyRoom)
     {
-        Players.AddRange(lobbyRoom.Players);
-        Start();
+        roomInstance = LoadBalancer.Instance.SpawnServer.NewMatch(this,lobbyRoom);
+        roomInstance.OnRoomStateChange += OnRoomStateChange;
     }
 
     private bool CanJoin(LobbyPlayer joindPlayer)
