@@ -74,7 +74,8 @@ public class SpawnServer : EventManagerBase
     private Room StartNewRoom()
     {
         // if not match any room start new room.
-        var gameServer = StartGameServer(currentPort);
+
+        var gameServer =  StartGameServer(currentPort);
 
         if (gameServer != null)
         {
@@ -94,7 +95,11 @@ public class SpawnServer : EventManagerBase
         // TODO: if there is no opened room
         // Start new server and add all players to this room
         // else create and add all players to this room
-        var newRoom = StartNewRoom();
+
+
+
+       var newRoom = StartNewRoom();
+      // var newRoom = rooms[3001];
 
         log.Debug($"NewMatch room player counts: {room.Players.Count} -   {matchedRoom.Players.Count}");
         for (int i = 0; i < room.Players.Count; i++)
@@ -107,6 +112,9 @@ public class SpawnServer : EventManagerBase
             var player = matchedRoom.Players[i];
             newRoom.AddPlayer(player.client, "teamB");
         }
+
+       // newRoom.Start();
+
         return newRoom;
     }
     #endregion
