@@ -470,6 +470,27 @@ namespace ACGAuthentication
             // read MyType data here
             return new SendAccessTokenKey(reader.ReadString());
         }
+
+        public static void WriteDateInfoEvent(this NetworkWriter writer, DateMessageRequestEvent req)
+        {
+            // write MyType data here
+            writer.WriteString(req.date);
+            writer.WriteString(req.accessToken);
+
+        }
+
+        public static DateMessageResponseEvent ReadDateInfoEvent(this NetworkReader reader)
+        {
+            // read MyType data here
+            return new DateMessageResponseEvent
+            {
+             
+                accessToken = reader.ReadString(),
+            };
+        }
+
+
+
         #endregion
 
     }

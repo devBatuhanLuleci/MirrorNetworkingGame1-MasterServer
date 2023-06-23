@@ -35,6 +35,8 @@ public class SpawnServer : EventManagerBase
         responseTypes.Add((byte)SpawnServerEvent.ConnectToGameServer, typeof(ConnectToGameServerEvent));
         responseTypes.Add((byte)SpawnServerEvent.CloseRoom, typeof(CloseRoomEvent));
         responseTypes.Add((byte)SpawnServerEvent.RoomInfoEvent, typeof(RoomInfoEvent));
+        responseTypes.Add((byte)SpawnServerEvent.DateMessageResponseEvent, typeof(DateMessageResponseEvent));
+        responseTypes.Add((byte)SpawnServerEvent.DateMessageRequestEvent, typeof(DateMessageRequestEvent));
         return responseTypes;
     }
 
@@ -98,8 +100,8 @@ public class SpawnServer : EventManagerBase
 
 
 
-       var newRoom = StartNewRoom();
-      // var newRoom = rooms[3001];
+      // var newRoom = StartNewRoom();
+       var newRoom = rooms[3001];
 
         log.Debug($"NewMatch room player counts: {room.Players.Count} -   {matchedRoom.Players.Count}");
         for (int i = 0; i < room.Players.Count; i++)
@@ -113,7 +115,7 @@ public class SpawnServer : EventManagerBase
             newRoom.AddPlayer(player.client, "teamB");
         }
 
-       // newRoom.Start();
+        newRoom.Start();
 
         return newRoom;
     }
