@@ -22,7 +22,7 @@ namespace kcp2k
 
         // If we don't receive anything these many milliseconds
         // then consider us disconnected
-        public const int DEFAULT_TIMEOUT = 10000;
+        public const int DEFAULT_TIMEOUT = 100000;
         public int timeout = DEFAULT_TIMEOUT;
         uint lastReceiveTime;
 

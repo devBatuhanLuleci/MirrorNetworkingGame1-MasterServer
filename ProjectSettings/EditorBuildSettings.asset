@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/AnyCivilizationGame/Scenes/Master.unity
     guid: 4fd6148cf9d869142a777c0c231b6dff
+  - enabled: 1
+    path: Assets/Mobile Console/Assets/LogConsole.unity
+    guid: 6d2ee6336ff704f55b20f3b62801afd5
   m_configObjects: {}
