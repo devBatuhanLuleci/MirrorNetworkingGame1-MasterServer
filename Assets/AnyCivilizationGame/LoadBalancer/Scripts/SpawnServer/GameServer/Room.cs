@@ -44,7 +44,8 @@ public class Room
     #region Private Fields
     private Dictionary<string, List<ClientPeer>> teams = new Dictionary<string, List<ClientPeer>>();
     SpawnServer SpawnServer;
-
+    private bool allPlayersConnected = false;
+    private int connectedPlayerCount = 0;
     #endregion
 
     #region Instance
@@ -125,16 +126,26 @@ public class Room
 
     public async void Start()
     {
-        Debug.Log($"{Port} room is starting");
-        //TODO: send user info to gameserver.
-        await Task.Delay(1500); 
-        SendTeamInfoToGameServer();
-        await Task.Delay(1500); 
-        ConnectPlayers();
-        await Task.Delay(1500); 
-        State = RoomState.Started;
-        Debug.Log($"{Port} room is started");
-
+        if (state != RoomState.Started)
+        {
+            State = RoomState.Started;
+            Debug.Log($"{Port} room is starting");
+            await Task.Delay(1500);
+            SendTeamInfoToGameServer();
+            await WaitForAllPlayersConnected();
+            ConnectPlayers();
+            Debug.Log($"{Port} room is started");
+        }
+    }
+    private async Task WaitForAllPlayersConnected()
+    {
+        while (!allPlayersConnected)
+        {
+            await Task.Delay(100);
+            Debug.Log("********* connectedPlayerCount " + 4 + " GetTotalPlayerCount() " + GetTotalPlayerCount());
+            if (4 == GetTotalPlayerCount())
+                allPlayersConnected = true;
+        }
     }
 
     private void SendTeamInfoToGameServer()
@@ -173,5 +184,17 @@ public class Room
     {
         peer = roomPlayer;
         Ready();
+    }
+
+    private int GetTotalPlayerCount()
+    {
+        Debug.Log("***** teams.Count " + teams.Count);
+        int count = 0;
+        foreach (var team in teams)
+        {
+            count += team.Value.Count;
+            Debug.Log("***** team.Value.Coun " + team.Value.Count);
+        }
+        return count ;
     }
 }
