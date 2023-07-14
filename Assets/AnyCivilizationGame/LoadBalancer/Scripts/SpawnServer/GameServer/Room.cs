@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 [System.Serializable]
@@ -107,8 +110,12 @@ public class Room
     {
         foreach (var team in teams)
         {
-            team.Value.ForEach(el => ConnectPlayer(el));
+            foreach (var player in team.Value)
+            {
+                ConnectPlayer(player);
+            }
         }
+
     }
 
     internal void ConnectPlayer(ClientPeer player)
@@ -116,13 +123,18 @@ public class Room
         SpawnServer.SendServerRequestToClient(player, new ConnectToGameServerEvent(Port, Host));
     }
 
-    public void Start()
+    public async void Start()
     {
-        Debug.Log($"{Port} room is started");
+        Debug.Log($"{Port} room is starting");
         //TODO: send user info to gameserver.
+        await Task.Delay(1500); 
         SendTeamInfoToGameServer();
+        await Task.Delay(1500); 
         ConnectPlayers();
+        await Task.Delay(1500); 
         State = RoomState.Started;
+        Debug.Log($"{Port} room is started");
+
     }
 
     private void SendTeamInfoToGameServer()
