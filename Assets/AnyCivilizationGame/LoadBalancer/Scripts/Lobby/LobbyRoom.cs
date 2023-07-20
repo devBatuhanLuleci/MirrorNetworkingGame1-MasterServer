@@ -23,7 +23,7 @@ public class LobbyRoom
         Players = new List<LobbyPlayer>();
         this.lobbyManager = lobbyManager;
     }
-
+    public Action OnClose;
     public LobbyRoom(LobbyPlayer player, LobbyManager lobbyManager, int id) : this(id, lobbyManager)
     {
         Debug.Log($"Lobby room created with {id} room id.");
@@ -55,6 +55,8 @@ public class LobbyRoom
             if (match != null)
             {
                 match.Start(this);
+                match.RemoveFromLoadBalancerList();
+                RemoveFromLoadBalancerList();
             }
             else
             {
@@ -65,6 +67,7 @@ public class LobbyRoom
         }
         else
         {
+            Debug.LogError("you cant start room");
             // TODO: return you cant start room response
         }
 
@@ -90,12 +93,25 @@ public class LobbyRoom
     }
     private void AddNewPlayer(LobbyPlayer lobbyPlayer, bool isLeader = false)
     {
-        RemovePlayer(lobbyPlayer);
-        AddListeners(lobbyPlayer);
+        if (!Players.Contains(lobbyPlayer))
+        {
+            Players.Add(lobbyPlayer);
+            AddListeners(lobbyPlayer);
+            lobbyPlayer.RoomId = Id;
+            Debug.Log($"AddNewPlayer RoomId {lobbyPlayer.RoomId}");
+            lobbyPlayer.OnDisconnected += (player) => {
+                RemovePlayer(player);
+                if (Players.Count <=0)
+                {
+                    OnClose?.Invoke();
+                }
+            };
+        }
+        else
+        {
+            Debug.LogError($"Player with connection ID : {lobbyPlayer.client.ConnectionId} already added to the list");
+        }
 
-        Players.Add(lobbyPlayer);
-        lobbyPlayer.RoomId = Id;
-        Debug.Log($"AddNewPlayer RoomId {lobbyPlayer.RoomId}");
     }
     private void NewPlayerInfoSendToRoom(LobbyPlayer newPlayer)
     {
@@ -199,7 +215,13 @@ public class LobbyRoom
             lobbyManager.SendServerRequestToClient(el.client, ev);
         });
         Players.Clear();
-        lobbyManager.RemoveRoom(this);
+        //lobbyManager.RemoveRoom(this);
+        RemoveFromLoadBalancerList();
+    }
+
+    public void RemoveFromLoadBalancerList()
+    {
+        OnClose?.Invoke();
     }
 
 

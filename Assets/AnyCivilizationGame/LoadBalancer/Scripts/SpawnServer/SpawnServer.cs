@@ -42,6 +42,7 @@ public class SpawnServer : EventManagerBase
     {
         if (!rooms.ContainsKey((ushort)port))
         {
+            UnityEngine.Debug.Log($"Setting room with port {port} ready");
             var newRoom = new Room((ushort)port, roomPlayer);
             rooms.Add((ushort)port, newRoom);
         }

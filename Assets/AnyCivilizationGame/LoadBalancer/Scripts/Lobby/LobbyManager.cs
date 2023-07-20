@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ACGAuthentication;
 using UnityEngine;
 public class LobbyManager : EventManagerBase
@@ -15,7 +16,21 @@ public class LobbyManager : EventManagerBase
     public string[] FriendNames = { "Liam", "Olivia", "Noah", "Emma" };
 
     #region Private fields
-    private int rommId = 0;
+    const int maxRoomsCount = 100;
+    private int getRoomID { get 
+        {
+            for (int i = 0; i < maxRoomsCount; i++)
+            {
+                if (!Rooms.ContainsKey(i))
+                {
+                    return i;
+                }
+            }
+            Debug.LogError($"Max room count {maxRoomsCount} reached !");
+            return -1;
+
+        }
+    }
     #endregion
     public LobbyManager(LoadBalancer loadBalancer) : base(loadBalancer)
     {
@@ -82,12 +97,26 @@ public class LobbyManager : EventManagerBase
         }
         Players.Add(client, player);
 
-        var room = new LobbyRoom(player, this, rommId++);
-        Rooms.Add(room.Id, room);
-
-        var ev = new LobbyRoomCreated(room.Id, player);
-        SendServerRequestToClient(client, ev);
-
+        var room = new LobbyRoom(player, this, getRoomID);
+        if (!Rooms.ContainsKey(room.Id))
+        {
+            Rooms.Add(room.Id, room);
+            room.OnClose += () =>
+            {
+                if (Rooms.ContainsKey(room.Id))
+                {
+                    Rooms.Remove(room.Id);
+                    Debug.Log($"room {room.Id} removed from loadbalancer");
+                }
+                else
+                {
+                    Debug.LogError($"Room Id {room.Id} not found in the list !");
+                    return;
+                }
+            };
+            var ev = new LobbyRoomCreated(room.Id, player);
+            SendServerRequestToClient(client, ev);
+        }
     }
 
     /// <summary>

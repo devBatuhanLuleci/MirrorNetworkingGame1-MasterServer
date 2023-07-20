@@ -35,6 +35,8 @@ public class PeerBase
     {
         Debug.Log("PeerBase Disconnect");
         loadBalancer.ServerDisconnect(ConnectionId);
+        if (OnPeerDisconnected != null)
+            OnPeerDisconnected.Invoke();
     }
 
 

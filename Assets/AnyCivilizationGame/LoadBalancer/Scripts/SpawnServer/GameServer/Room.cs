@@ -45,7 +45,6 @@ public class Room
     private Dictionary<string, List<ClientPeer>> teams = new Dictionary<string, List<ClientPeer>>();
     SpawnServer SpawnServer;
     private bool allPlayersConnected = false;
-    private int connectedPlayerCount = 0;
     #endregion
 
     #region Instance
