@@ -423,19 +423,38 @@ namespace ACGAuthentication
         #region IEvent
         public static IResponseEvent ReadIEvent(this NetworkReader reader, Type type)
         {
-            // Get the generic type definition
-            MethodInfo method = typeof(NetworkReader).GetMethod("Read", BindingFlags.Instance | BindingFlags.Public);
-            // Build a method with the specific type argument you're interested in
-            method = method.MakeGenericMethod(type);
-            return method.Invoke(reader, null) as IResponseEvent;
+
+
+            try
+            {
+                // Get the generic type definition
+                MethodInfo method = typeof(NetworkReader).GetMethod("Read", BindingFlags.Instance | BindingFlags.Public);
+                // Build a method with the specific type argument you're interested in
+                method = method.MakeGenericMethod(type);
+                return method.Invoke(reader, null) as IResponseEvent;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
         public static void WriteIEvent(this NetworkWriter writer, Type type, IEvent data)
         {
-            // Get the generic type definition
-            MethodInfo method = writer.GetType().GetMethod("Write", BindingFlags.Instance | BindingFlags.Public);
-            // Build a method with the specific type argument you're interested in
-            method = method.MakeGenericMethod(type);
-            method.Invoke(writer, new object[] { data });
+            try
+            {
+
+                // Get the generic type definition
+                MethodInfo method = writer.GetType().GetMethod("Write", BindingFlags.Instance | BindingFlags.Public);
+                // Build a method with the specific type argument you're interested in
+                method = method.MakeGenericMethod(type);
+                method.Invoke(writer, new object[] { data });
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
 
         #endregion
