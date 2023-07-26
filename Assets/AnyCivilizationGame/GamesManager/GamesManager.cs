@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -6,11 +7,7 @@ public class GamesManager : MonoBehaviour
 {
     private static GamesManager instance;
 
-    public int PlayersPerTeam = 2;
-    public int TeamsPerGame = 2;
-    public float SetupGameTimeout = 30f;
-
-    public List<WarbotsGame> GamesList { get; private set; }
+    public ConcurrentDictionary<string, WarbotsGame> GamesList { get; private set; }
 
     public static GamesManager Instance
     {
