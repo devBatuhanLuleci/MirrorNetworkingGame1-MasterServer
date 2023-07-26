@@ -512,9 +512,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1242200661}
-  - component: {fileID: 1242200660}
+  - component: {fileID: 1242200665}
   - component: {fileID: 1242200663}
+  - component: {fileID: 1242200660}
   - component: {fileID: 1242200664}
+  - component: {fileID: 1242200666}
   - component: {fileID: 1242200662}
   m_Layer: 0
   m_Name: Games Manager
@@ -619,6 +621,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayersPerTeam: 2
   TeamsPerGame: 2
+  CheckNewPlayersInterval: 1
+--- !u!114 &1242200665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242200659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa3587b888404342b9d2e68ac8b9139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1242200666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242200659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f47653411a52be48b7e338e9d09ad55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CheckGameSetupsInterval: 1
 --- !u!1 &1274351932
 GameObject:
   m_ObjectHideFlags: 0
