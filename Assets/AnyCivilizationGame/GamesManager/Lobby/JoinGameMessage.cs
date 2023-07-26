@@ -1,21 +1,27 @@
 using Mirror;
 
-public struct JoinRequestMessage : NetworkMessage
+public struct JoinGameMessage : NetworkMessage
 {
     public string walletId;
     public string accessToken;
     public string refreshToken;
-    public string invitationCode;
+    public GameMode gameMode;
 
-    public JoinRequestMessage(
+    public JoinGameMessage(
         string walletId,
         string accessToken,
         string refreshToken,
-        string invitationCode)
+        GameMode gameMode)
     {
         this.walletId = walletId;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.invitationCode = invitationCode;
+        this.gameMode = gameMode;
     }
+}
+
+public enum GameMode
+{
+    SinglePlayer,
+    MultiPlayer
 }

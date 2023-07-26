@@ -4,36 +4,46 @@ using UnityEngine;
 
 public class PlayerPool : MonoBehaviour
 {
-    private ConcurrentDictionary<int, WarbotsPlayer> playerPool = new();
+    private ConcurrentQueue<WarbotsPlayer> singlePlayerQueue = new();
+    private ConcurrentQueue<WarbotsPlayer> multiplayerQueue = new();
 
-    public void AddPlayerToPool(WarbotsPlayer player)
+    public void AddForSinglePlayerGame(WarbotsPlayer player)
     {
-        playerPool.TryAdd(player.ConnectionId, player);
+        singlePlayerQueue.Enqueue(player);
     }
 
-    public WarbotsPlayer GetPlayerData(int connectionId)
+    public void AddForMultiplayerGame(WarbotsPlayer player)
     {
-        if (playerPool.TryGetValue(connectionId, out var player))
-        {
-            return player;
-        }
-        return null;
+        multiplayerQueue.Enqueue(player);
     }
 
-    public WarbotsPlayer GetRandomPlayer()
+    public WarbotsPlayer GetForSinglePlayerGame()
     {
-        if (playerPool.IsEmpty)
+        if (singlePlayerQueue.IsEmpty)
         {
             return null;
         }
 
-        var playerArray = new WarbotsPlayer[playerPool.Count];
-        playerPool.Values.CopyTo(playerArray, 0);
+        if (singlePlayerQueue.TryDequeue(out var player))
+        {
+            return player;
+        }
 
-        var randomIndex = UnityEngine.Random.Range(0, playerArray.Length);
-        var randomPlayer = playerArray[randomIndex];
-        playerPool.TryRemove(randomPlayer.ConnectionId, out _);
+        return null;
+    }
 
-        return randomPlayer;
+    public WarbotsPlayer GetForMultiplayerGame()
+    {
+        if (multiplayerQueue.IsEmpty)
+        {
+            return null;
+        }
+
+        if (multiplayerQueue.TryDequeue(out var player))
+        {
+            return player;
+        }
+
+        return null;
     }
 }

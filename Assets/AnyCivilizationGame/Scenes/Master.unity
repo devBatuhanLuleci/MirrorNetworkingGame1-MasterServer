@@ -514,8 +514,8 @@ GameObject:
   - component: {fileID: 1242200661}
   - component: {fileID: 1242200660}
   - component: {fileID: 1242200663}
-  - component: {fileID: 1242200662}
   - component: {fileID: 1242200664}
+  - component: {fileID: 1242200662}
   m_Layer: 0
   m_Name: Games Manager
   m_TagString: Untagged
@@ -619,7 +619,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayersPerTeam: 2
   TeamsPerGame: 2
-  SetupGameTimeout: 30
 --- !u!1 &1274351932
 GameObject:
   m_ObjectHideFlags: 0
