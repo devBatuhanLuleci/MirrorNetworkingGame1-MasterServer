@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class MultiplayerGameSetupFactory : NetworkBehaviour
+public class MultiplayerGameSetupFactory : MonoBehaviour
 {
     public int PlayersPerTeam = 2;
     public int TeamsPerGame = 2;

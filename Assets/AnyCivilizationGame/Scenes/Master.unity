@@ -515,7 +515,7 @@ GameObject:
   - component: {fileID: 1242200665}
   - component: {fileID: 1242200663}
   - component: {fileID: 1242200660}
-  - component: {fileID: 1242200664}
+  - component: {fileID: 1242200667}
   - component: {fileID: 1242200666}
   - component: {fileID: 1242200662}
   m_Layer: 0
@@ -607,21 +607,6 @@ MonoBehaviour:
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
---- !u!114 &1242200664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1242200659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 184e8e10a59b15b48b50d0ff1da9e660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayersPerTeam: 2
-  TeamsPerGame: 2
-  CheckNewPlayersInterval: 1
 --- !u!114 &1242200665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,6 +632,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CheckGameSetupsInterval: 1
+--- !u!114 &1242200667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242200659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 184e8e10a59b15b48b50d0ff1da9e660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayersPerTeam: 2
+  TeamsPerGame: 2
+  CheckNewPlayersInterval: 1
 --- !u!1 &1274351932
 GameObject:
   m_ObjectHideFlags: 0
