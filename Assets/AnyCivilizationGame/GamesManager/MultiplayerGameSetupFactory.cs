@@ -37,6 +37,8 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
 
             if (player != null)
             {
+                Debug.Log("Player " + player.Connection.connectionId + " found and ready to be added to a team.");
+
                 bool playerAdded = false;
 
                 foreach (var game in gamesManager.GamesList.Values)
@@ -48,6 +50,7 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
                             team.Players.TryAdd(player.Connection.connectionId, player);
                             playerAdded = true;
                             SendJoinStatusMessageToTeamPlayers(team, JoinStatus.Waiting, GetJoinStatusText(team));
+                            Debug.Log("Player " + player.Connection.connectionId + " added to team " + team.TeamId);
                             break;
                         }
                     }
@@ -60,6 +63,8 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
 
                 if (!playerAdded)
                 {
+                    Debug.Log("Player " + player.Connection.connectionId + " will be added to a new game.");
+
                     var newGame = new WarbotsGame();
                     gamesManager.GamesList.TryAdd(newGame.GameId, newGame);
 
@@ -68,6 +73,7 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
 
                     newTeam.Players.TryAdd(player.Connection.connectionId, player);
                     SendJoinStatusMessage(player, JoinStatus.Waiting, GetJoinStatusText(newTeam));
+                    Debug.Log("Player " + player.Connection.connectionId + " added to new game " + newGame.GameId + " and team " + newTeam.TeamId);
                 }
             }
 
@@ -84,6 +90,7 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
         };
 
         player.Connection.Send(joinStatusMessage);
+        Debug.Log("JoinStatusMessage sent to player " + player.Connection.connectionId + ": Status: " + status + ", Text: " + text);
     }
 
     private void SendJoinStatusMessageToTeamPlayers(WarbotsTeam team, JoinStatus status, string text)

@@ -22,12 +22,10 @@ public class LobbyNetworkManager : NetworkManager
         }
     }
 
-    private void OnJoinRequest(
-        NetworkConnection conn,
-        JoinGameMessage joinMessage)
+    private void OnJoinRequest(NetworkConnection conn, JoinGameMessage joinMessage)
     {
         var newPlayer = new WarbotsPlayer
-        { 
+        {
             Connection = conn,
             WalletId = joinMessage.walletId,
             AccessToken = joinMessage.accessToken,
@@ -38,9 +36,11 @@ public class LobbyNetworkManager : NetworkManager
         {
             case GameMode.SinglePlayer:
                 playerPool.AddForSinglePlayerGame(newPlayer);
+                Debug.Log("Player " + newPlayer.Connection.connectionId + " joined as SinglePlayer.");
                 break;
             case GameMode.MultiPlayer:
                 playerPool.AddForMultiplayerGame(newPlayer);
+                Debug.Log("Player " + newPlayer.Connection.connectionId + " joined as MultiPlayer.");
                 break;
             default:
                 throw new NotImplementedException("Game-mode is not supported!");

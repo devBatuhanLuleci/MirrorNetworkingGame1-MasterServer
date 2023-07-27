@@ -10,11 +10,13 @@ public class PlayerPool : MonoBehaviour
     public void AddForSinglePlayerGame(WarbotsPlayer player)
     {
         singlePlayerQueue.Enqueue(player);
+        Debug.Log("Player " + player.Connection.connectionId + " added to single-player queue.");
     }
 
     public void AddForMultiplayerGame(WarbotsPlayer player)
     {
         multiplayerQueue.Enqueue(player);
+        Debug.Log("Player " + player.Connection.connectionId + " added to multiplayer queue.");
     }
 
     public WarbotsPlayer GetForSinglePlayerGame()
@@ -26,6 +28,7 @@ public class PlayerPool : MonoBehaviour
 
         if (singlePlayerQueue.TryDequeue(out var player))
         {
+            Debug.Log("Player " + player.Connection.connectionId + " dequeued from single-player queue.");
             return player;
         }
 
@@ -41,6 +44,7 @@ public class PlayerPool : MonoBehaviour
 
         if (multiplayerQueue.TryDequeue(out var player))
         {
+            Debug.Log("Player " + player.Connection.connectionId + " dequeued from multiplayer queue.");
             return player;
         }
 
