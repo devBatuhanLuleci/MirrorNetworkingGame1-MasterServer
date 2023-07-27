@@ -3,8 +3,17 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+public enum ServerMode
+{
+    Debug,
+    Local,
+    Container
+}
+
 public class GameServerFactory : MonoBehaviour
 {
+    public ServerMode ServerMode;
+    public string DebugServerAddress;
     public float CheckGameSetupsInterval = 1f;
 
     private MultiplayerGamesManager gamesManager;

@@ -33,7 +33,7 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
     {
         while (true)
         {
-            WarbotsPlayer player = playerPool.GetForMultiplayerGame();
+            WarbotsPlayer player = playerPool.GetFromPool();
 
             if (player != null)
             {

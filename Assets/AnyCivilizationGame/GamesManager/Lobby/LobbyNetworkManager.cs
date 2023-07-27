@@ -35,11 +35,11 @@ public class LobbyNetworkManager : NetworkManager
         switch (joinMessage.gameMode)
         {
             case GameMode.SinglePlayer:
-                playerPool.AddForSinglePlayerGame(newPlayer);
+                //playerPool.AddForSinglePlayerGame(newPlayer);
                 Debug.Log("Player " + newPlayer.Connection.connectionId + " joined as SinglePlayer.");
                 break;
             case GameMode.MultiPlayer:
-                playerPool.AddForMultiplayerGame(newPlayer);
+                playerPool.AddToPool(newPlayer);
                 Debug.Log("Player " + newPlayer.Connection.connectionId + " joined as MultiPlayer.");
                 break;
             default:
