@@ -24,24 +24,26 @@ public class LobbyNetworkManager : NetworkManager
 
     private void OnJoinRequest(
         NetworkConnection conn,
-        JoinGameMessage joinRequest)
+        JoinGameMessage joinMessage)
     {
         var newPlayer = new WarbotsPlayer
         { 
-            //ConnectionId = conn.ConnectionId,
+            Connection = conn,
+            WalletId = joinMessage.walletId,
+            AccessToken = joinMessage.accessToken,
+            RefreshToken = joinMessage.refreshToken
         };
 
-        if (joinRequest.gameMode == GameMode.SinglePlayer)
+        switch (joinMessage.gameMode)
         {
-            playerPool.AddForSinglePlayerGame(newPlayer);
-        }
-        else if (joinRequest.gameMode == GameMode.MultiPlayer)
-        {
-            playerPool.AddForMultiplayerGame(newPlayer);
-        }
-        else
-        {
-            throw new NotImplementedException("Game-mode is not supported!");
+            case GameMode.SinglePlayer:
+                playerPool.AddForSinglePlayerGame(newPlayer);
+                break;
+            case GameMode.MultiPlayer:
+                playerPool.AddForMultiplayerGame(newPlayer);
+                break;
+            default:
+                throw new NotImplementedException("Game-mode is not supported!");
         }
     }
 }

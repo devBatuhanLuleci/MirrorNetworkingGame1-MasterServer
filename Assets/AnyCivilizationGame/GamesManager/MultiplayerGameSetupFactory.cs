@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
+using Mirror;
 
-public class MultiplayerGameSetupFactory : MonoBehaviour
+public class MultiplayerGameSetupFactory : NetworkBehaviour
 {
     public int PlayersPerTeam = 2;
     public int TeamsPerGame = 2;
@@ -45,8 +45,9 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
                     {
                         if (team.Players.Count < PlayersPerTeam)
                         {
-                            team.Players.TryAdd(player.ConnectionId, player);
+                            team.Players.TryAdd(player.Connection.connectionId, player);
                             playerAdded = true;
+                            SendJoinStatusMessageToTeamPlayers(team, JoinStatus.Waiting, GetJoinStatusText(team));
                             break;
                         }
                     }
@@ -65,11 +66,38 @@ public class MultiplayerGameSetupFactory : MonoBehaviour
                     var newTeam = new WarbotsTeam();
                     newGame.Teams.TryAdd(newTeam.TeamId, newTeam);
 
-                    newTeam.Players.TryAdd(player.ConnectionId, player);
+                    newTeam.Players.TryAdd(player.Connection.connectionId, player);
+                    SendJoinStatusMessage(player, JoinStatus.Waiting, GetJoinStatusText(newTeam));
                 }
             }
 
             yield return new WaitForSeconds(CheckNewPlayersInterval);
         }
+    }
+
+    private void SendJoinStatusMessage(WarbotsPlayer player, JoinStatus status, string text)
+    {
+        JoinStatusMessage joinStatusMessage = new JoinStatusMessage
+        {
+            Status = status,
+            Text = text
+        };
+
+        player.Connection.Send(joinStatusMessage);
+    }
+
+    private void SendJoinStatusMessageToTeamPlayers(WarbotsTeam team, JoinStatus status, string text)
+    {
+        foreach (var player in team.Players.Values)
+        {
+            SendJoinStatusMessage(player, status, text);
+        }
+    }
+
+    private string GetJoinStatusText(WarbotsTeam team)
+    {
+        int currentPlayers = team.Players.Count;
+        int totalPlayers = PlayersPerTeam;
+        return currentPlayers + " / " + totalPlayers;
     }
 }
